@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>React App</title>
+    </head>
+    <body>
+        <div id="react-app"></div>
+        <script src="https://cdn.jsdelivr.net/react/0.14.0-rc1/react.js"></script>
+        <script src="https://cdn.jsdelivr.net/react/0.14.0-rc1/react-dom.js"></script>
+    </body>
+</html>
+
+<script>
+    var contactsNew = [
+                {key: 1, name: "James K Nelson", email: "james@jamesknelson.com", description: "Front-end Unicorn"},
+                {key: 2, name: "Jim", email: "jim@example.com"},
+                {key: 3, name: "Joe"}
+            ]
+
+    console.log(contactsNew);
+
+    var listElementNew = contactsNew.filter(function(contactsNew){return contactsNew.email;})
+
+    console.log(listElementNew);
+
+
+    var listNewElementFilterd = listElementNew.map(function(contactsNew)
+                        {
+                            return React.createElement('li', {key: contactsNew.key},
+                                React.createElement('h2', {}, contactsNew.name),
+                                    React.createElement('a', {href: 'mailTo: ' + contactsNew.email}, contactsNew.email),
+                                        React.createElement('div', {}, contactsNew.description)
+                                )
+                            }
+                        )
+    console.log(listNewElementFilterd);
+
+    var rootElement = React.createElement('div', {},
+                            React.createElement('h1', {}, "Contacts"),
+                                React.createElement('ul', {}, listNewElementFilterd)
+                            )
+
+    ReactDOM.render(rootElement, document.getElementById('react-app'))
+</script>

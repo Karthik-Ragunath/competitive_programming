@@ -46,20 +46,17 @@ ll index_number(ll x, ll y, ll row_length, ll column_length, bool should_add = f
         x = 0;
         y = 0;
     }
-    else
+    auto nodes_iter = nodes.find(make_pair(x, y));
+    if(nodes_iter == nodes.end())
     {
-        auto nodes_iter = nodes.find(make_pair(x, y));
-        if(nodes_iter == nodes.end())
+        if(should_add)
         {
-            if(should_add)
-            {
-                ll size = nodes_index_map.size();
-                nodes_index_map.insert(make_pair(make_pair(x, y), size));
-            }
-            else
-            {
-                return -1;
-            }
+            ll size = nodes_index_map.size();
+            nodes_index_map.insert(make_pair(make_pair(x, y), size));
+        }
+        else
+        {
+            return -1;
         }
     }
     return nodes_index_map[make_pair(x, y)]; // default value is zero when no match found, also used in cases boundary edges.
@@ -78,7 +75,7 @@ int main()
         nodes.clear();
         nodes_index_map.clear();
         // cout << "mile 2" << "\n";
-        nodes_index_map.insert(make_pair(make_pair(0, 0), 0));
+        // nodes_index_map.insert(make_pair(make_pair(0, 0), 0));
         ll rows, columns, connections;
         cin >> rows >> columns >> connections;
         ll solution = -1;
@@ -127,9 +124,27 @@ int main()
         }
         ll df_x_arr[4] = {1, 0, -1, 0};
         ll df_y_arr[4] = {0, 1, 0, -1};
-        if(solution == 0)
+        if(rows == 1 && columns == 1)
         {
-            cout << solution << endl;
+        	cout << "Chefland is doomed" << "\n";
+        	continue;
+        }
+        else if(rows == 1 || columns == 1)
+        {
+        	if(connections == 0)
+        	{
+        		cout << 1 << "\n";
+        	}
+        	else
+        	{
+        		cout << 0 << "\n";
+        	}
+        	continue;
+        }
+        else if(solution == 0)
+        {
+            cout << solution << "\n";
+            continue;
         }
         else
         {

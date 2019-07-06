@@ -117,8 +117,6 @@ int main()
             {
                 connections_parent[parent_set_1] = parent_set_2;
             }
-            nodes.insert(make_pair(x1, y1));
-            nodes.insert(make_pair(x2, y2));
             pair_nodes_set.insert(make_pair(make_pair(x1, y1), make_pair(x2, y2)));
             pair_nodes_set.insert(make_pair(make_pair(x2, y2), make_pair(x1, y1)));
         }
@@ -148,10 +146,10 @@ int main()
         }
         else
         {
-            for(auto nodes_iter = nodes.begin(); nodes_iter != nodes.end(); nodes_iter++)
+            for(auto nodes_iter = nodes_index_map.begin(); nodes_iter != nodes_index_map.end(); nodes_iter++)
             {
-                ll x = nodes_iter -> first;
-                ll y = nodes_iter -> second;
+                ll x = nodes_iter -> first.first;
+                ll y = nodes_iter -> first.second;
                 if(x == 0 || y == 0 || x == rows || y == columns)
                 {
                     continue;
@@ -163,7 +161,7 @@ int main()
                         ll df_x = x + df_x_arr[i];
                         ll df_y = y + df_y_arr[i];
                         auto find_iter = pair_nodes_set.find(make_pair(make_pair(x, y), make_pair(df_x, df_y)));
-                        if(find_iter == pair_nodes_set.end())
+                        if(find_iter == pair_nodes_set.end() && df_x >= 0 && df_x <= rows && df_y >= 0 && df_y <= columns)
                         {
                             // cout << "x: " << x << " y: " << y << " df_x: " << df_x << " df_y: " << df_y << "\n";
                             ll index_x_y = nodes_index_map[make_pair(x, y)];

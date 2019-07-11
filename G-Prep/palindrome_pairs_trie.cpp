@@ -46,12 +46,24 @@ struct Trie_Graph
             {
                 if(is_suffix_palindrome[i + 1])
                 {
+                    cout << "word: " << word << " index: " << i << "\n";
                     node -> below.push_back(index);
                 }
             }
         }
         node -> uptill.push_back(index);
-        cout << "----------";
+        cout << "----------" << "\n";
+    }
+
+    void print_node_children(Trie* node)
+    {
+        cout << "Node child printing" << "\n";
+        for(auto child: node -> children)
+        {
+            cout << child.first << "\n";
+            cout << child.second << "\n";
+        }
+        cout << "///////////" << "\n";
     }
 
     void search(string word, int index, vector< bool > &is_suffix_palindrome, unordered_map< int, int > &solution_vector)
@@ -87,6 +99,11 @@ struct Trie_Graph
         }
         if(match_exists)
         {
+            cout << "came hereeeeeee baby (uptill size): " <<  node -> uptill.size() << "\n";
+            // for(vector< int >::iterator iter = node -> uptill.begin(); iter != node -> uptill.end(); iter++)
+            // {    
+            //     solution_vector.insert(make_pair(*iter, index));
+            // }
             for(auto uptill_index: node -> uptill)
             {    
                 solution_vector.insert(make_pair(uptill_index, index));
@@ -117,7 +134,7 @@ class Solution
             int string_length = word.length();
             for(int i = 1; i < string_length; i++)
             {
-                cout << "first pointer: " << first_pointer << " second_pointer: " << second_pointer << "\n";
+                // cout << "first pointer: " << first_pointer << " second_pointer: " << second_pointer << "\n";
                 if(first_pointer == second_pointer)
                 {
                     int first_half_length = (i + 1) / 2;
@@ -199,11 +216,11 @@ class Solution
                 cout << "rev word: " << rev_word << "\n";
                 vector< bool > palindromic_prefixes_inversed(palindromic_prefixes);
                 reverse(palindromic_prefixes_inversed.begin(), palindromic_prefixes_inversed.end());
-                // trie_graph -> search(rev_word, i, palindromic_prefixes_inversed, solution_vector);
+                trie_graph -> search(rev_word, i, palindromic_prefixes_inversed, solution_vector);
                 auto palindromic_suffixes_inversed = rolling_hash(rev_word);
                 vector< bool > palindromic_suffixes(palindromic_suffixes_inversed);
                 reverse(palindromic_suffixes.begin(), palindromic_suffixes.end());
-                // trie_graph -> insert_nodes(word, i, palindromic_suffixes);
+                trie_graph -> insert_nodes(word, i, palindromic_suffixes);
             }
 
             trie_graph = new Trie_Graph;
@@ -215,15 +232,15 @@ class Solution
                 reverse(rev_word.begin(), rev_word.end());
                 vector< bool > palindromic_prefixes_inversed(palindromic_prefixes);
                 reverse(palindromic_prefixes_inversed.begin(), palindromic_prefixes_inversed.end());
-                // trie_graph -> search(rev_word, i, palindromic_prefixes_inversed, solution_vector);
+                trie_graph -> search(rev_word, i, palindromic_prefixes_inversed, solution_vector);
                 auto palindromic_suffixes_inversed = rolling_hash(rev_word);
                 vector< bool > palindromic_suffixes(palindromic_suffixes_inversed);
                 reverse(palindromic_suffixes.begin(), palindromic_suffixes.end());
-                // trie_graph -> insert_nodes(word, i, palindromic_suffixes);
+                trie_graph -> insert_nodes(word, i, palindromic_suffixes);
             }
 
             vector< vector< int > > palindromic_pairs;
-            for(auto map_iter = solution_vector.begin(); map_iter != solution_vector.end(); map_iter)
+            for(auto map_iter = solution_vector.begin(); map_iter != solution_vector.end(); map_iter++)
             {
                 int index_1 = map_iter -> first;
                 int index_2 = map_iter -> second;
@@ -240,12 +257,22 @@ int main()
 {
     Solution solution;
     vector< string > words;
-    words.push_back("bat");
-    words.push_back("tab");
+    words.push_back("cbd");
+    words.push_back("aadbc");
     words.push_back("cat");
     // solution.print_suffix_palindromes(words);
     cout << "mile stone 1" << "\n";
-    solution.palindromePairs(words);
+    vector< vector< int > > palindrome_pairs;
+    palindrome_pairs = solution.palindromePairs(words);
+    cout << "size of solution: " << palindrome_pairs.size() << "\n";
+    for(auto outer_vec: palindrome_pairs)
+    {
+        cout << "-------solution-------" << "\n";
+        for(auto inner_vec: outer_vec)
+        {
+            cout << inner_vec << "\n";
+        }
+    }
     // Trie_Graph* trie_graph = new Trie_Graph;
     // vector< bool > test;
     // test.push_back(0);

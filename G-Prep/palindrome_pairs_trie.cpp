@@ -219,11 +219,22 @@ class Solution
             unordered_map< int, int > solution_vector;
 
             Trie_Graph* trie_graph = new Trie_Graph;
+            vector< int > empty_string_indices;
+            vector< int > induvidual_palindromic_string_indices;
             for(int i = 0; i < words_vec_length; i++)
             {
                 string word = words[i];
+                if(word == "")
+                {
+                	empty_string_indices.push_back(i);
+                	continue;
+                }
                 // cout << "index: " << i << " word: " << word << "\n";
                 auto palindromic_prefixes = rolling_hash(word);
+                if(palindromic_prefixes[word.length() - 1] == true)
+                {
+                	induvidual_palindromic_string_indices.push_back(i);
+                }
                 string rev_word(word); //copy string
                 reverse(rev_word.begin(), rev_word.end());
                 // cout << "rev word: " << rev_word << "\n";
@@ -240,6 +251,10 @@ class Solution
             for(int i = words_vec_length - 1; i >= 0; i--)
             {
                 string word = words[i];
+                if(word == "")
+                {
+                	continue;
+                }
                 auto palindromic_prefixes = rolling_hash(word);
                 string rev_word(word); //copy string
                 reverse(rev_word.begin(), rev_word.end());
@@ -252,11 +267,25 @@ class Solution
                 trie_graph -> insert_nodes(word, i, palindromic_suffixes);
             }
 
+            if(!empty_string_indices.empty() && !induvidual_palindromic_string_indices.empty())
+            {
+            	for(auto empty_index: empty_string_indices)
+            	{
+            		for(auto induvidual_palindromic_string_index: induvidual_palindromic_string_indices)
+            		{
+            			// cout << "Induvidual: " << induvidual_palindromic_string_index << " empty: " << empty_index << "\n";
+            			solution_vector.insert(make_pair(empty_index, induvidual_palindromic_string_index));
+            			solution_vector.insert(make_pair(induvidual_palindromic_string_index, empty_index));
+            		}
+            	}
+            }
+
             vector< vector< int > > palindromic_pairs;
             for(auto map_iter = solution_vector.begin(); map_iter != solution_vector.end(); map_iter++)
             {
                 int index_1 = map_iter -> first;
                 int index_2 = map_iter -> second;
+                // cout << "Index_1: " << index_1 << " Index_2: " << index_2 << "\n";
                 vector< int > pair_vec;
                 pair_vec.push_back(index_1);
                 pair_vec.push_back(index_2);

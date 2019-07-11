@@ -4,9 +4,9 @@ using namespace std;
 
 struct HASH
 {
-    size_t operator()(const pair< ll, ll > &pair_node) const
+    size_t operator()(const pair< int, int > &pair_node) const
     {
-        return hash< ll >()(pair_node.first ^ (pair_node.second << 32));
+        return hash< int >()(pair_node.first ^ (pair_node.second << 32));
     }
 };
 
@@ -23,7 +23,7 @@ struct Trie_Graph
     Trie* root = new Trie;
     void insert_nodes(string word, int index, vector< bool > &is_suffix_palindrome)
     {
-        cout << "insert index: " << index << " word: " << word << "\n";
+        // // cout << "insert index: " << index << " word: " << word << "\n";
         Trie* node = root;
         int string_length = word.length();
         for(int i = 0; i < string_length; i++)
@@ -46,13 +46,13 @@ struct Trie_Graph
             {
                 if(is_suffix_palindrome[i + 1])
                 {
-                    cout << "word: " << word << " index: " << i << "\n";
+                    // // cout << "word: " << word << " index: " << i << "\n";
                     node -> below.push_back(index);
                 }
             }
         }
         node -> uptill.push_back(index);
-        cout << "----------" << "\n";
+        // cout << "----------" << "\n";
     }
 
     void print_node_children(Trie* node)
@@ -68,7 +68,7 @@ struct Trie_Graph
 
     void search(string word, int index, vector< bool > &is_suffix_palindrome, unordered_map< int, int > &solution_vector)
     {
-        cout << "search index: " << index << " word: " << word << "\n";
+        // cout << "search index: " << index << " word: " << word << "\n";
         Trie* node = root;
         int string_length = word.length();
         int char_index = 0;
@@ -99,7 +99,7 @@ struct Trie_Graph
         }
         if(match_exists)
         {
-            cout << "came hereeeeeee baby (uptill size): " <<  node -> uptill.size() << "\n";
+            // cout << "came hereeeeeee baby (uptill size): " <<  node -> uptill.size() << "\n";
             // for(vector< int >::iterator iter = node -> uptill.begin(); iter != node -> uptill.end(); iter++)
             // {    
             //     solution_vector.insert(make_pair(*iter, index));
@@ -113,7 +113,7 @@ struct Trie_Graph
                 solution_vector.insert(make_pair(below_index, index));
             }
         }
-        cout << "*******" << "\n";
+        // cout << "*******" << "\n";
     }
 };
 
@@ -134,7 +134,7 @@ class Solution
             int string_length = word.length();
             for(int i = 1; i < string_length; i++)
             {
-                // cout << "first pointer: " << first_pointer << " second_pointer: " << second_pointer << "\n";
+                // // cout << "first pointer: " << first_pointer << " second_pointer: " << second_pointer << "\n";
                 if(first_pointer == second_pointer)
                 {
                     int first_half_length = (i + 1) / 2;
@@ -197,11 +197,24 @@ class Solution
             }
         }
 
+        void print_palindromic_pairs(vector< vector< int > > &palindrome_pairs)
+        {
+        	cout << "size of solution: " << palindrome_pairs.size() << "\n";
+		    for(auto outer_vec: palindrome_pairs)
+		    {
+		        cout << "-------solution-------" << "\n";
+		        for(auto inner_vec: outer_vec)
+		        {
+		            cout << inner_vec << "\n";
+		        }
+		    }
+		}
+
         vector<vector<int>> palindromePairs(vector<string>& words) 
         {
             // print_suffix_palindromes(words);
              int words_vec_length = words.size();
-             cout << "mile_stone 2: " << words_vec_length << "\n";
+             // cout << "mile_stone 2: " << words_vec_length << "\n";
              
             unordered_map< int, int > solution_vector;
 
@@ -209,11 +222,11 @@ class Solution
             for(int i = 0; i < words_vec_length; i++)
             {
                 string word = words[i];
-                cout << "index: " << i << " word: " << word << "\n";
+                // cout << "index: " << i << " word: " << word << "\n";
                 auto palindromic_prefixes = rolling_hash(word);
                 string rev_word(word); //copy string
                 reverse(rev_word.begin(), rev_word.end());
-                cout << "rev word: " << rev_word << "\n";
+                // cout << "rev word: " << rev_word << "\n";
                 vector< bool > palindromic_prefixes_inversed(palindromic_prefixes);
                 reverse(palindromic_prefixes_inversed.begin(), palindromic_prefixes_inversed.end());
                 trie_graph -> search(rev_word, i, palindromic_prefixes_inversed, solution_vector);
@@ -259,26 +272,22 @@ int main()
     vector< string > words;
     words.push_back("cbd");
     words.push_back("aadbc");
-    words.push_back("cat");
+    words.push_back("bdaa");
     // solution.print_suffix_palindromes(words);
-    cout << "mile stone 1" << "\n";
+    // cout << "mile stone 1" << "\n";
     vector< vector< int > > palindrome_pairs;
     palindrome_pairs = solution.palindromePairs(words);
-    cout << "size of solution: " << palindrome_pairs.size() << "\n";
-    for(auto outer_vec: palindrome_pairs)
-    {
-        cout << "-------solution-------" << "\n";
-        for(auto inner_vec: outer_vec)
-        {
-            cout << inner_vec << "\n";
-        }
-    }
-    // Trie_Graph* trie_graph = new Trie_Graph;
-    // vector< bool > test;
-    // test.push_back(0);
-    // test.push_back(0);
-    // test.push_back(1);
-    // trie_graph -> insert_nodes("bat", 0, test);
-    // trie_graph -> insert_nodes("tab", 0, test);
+    // solution.print_palindromic_pairs(palindrome_pairs);
+
+    /* Testing
+    Trie_Graph* trie_graph = new Trie_Graph;
+    vector< bool > test;
+    test.push_back(0);
+    test.push_back(0);
+    test.push_back(1);
+    trie_graph -> insert_nodes("bat", 0, test);
+    trie_graph -> insert_nodes("tab", 0, test);
+	*/
+
     return 0;
 }

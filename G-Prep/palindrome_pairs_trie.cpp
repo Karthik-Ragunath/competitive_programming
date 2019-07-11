@@ -66,7 +66,7 @@ struct Trie_Graph
         cout << "///////////" << "\n";
     }
 
-    void search(string word, int index, vector< bool > &is_suffix_palindrome, unordered_map< int, int > &solution_vector)
+    void search(string word, int index, vector< bool > &is_suffix_palindrome, unordered_map< int, unordered_set< int > > &solution_vector)
     {
         // cout << "search index: " << index << " word: " << word << "\n";
         Trie* node = root;
@@ -86,7 +86,18 @@ struct Trie_Graph
                     {
                         for(auto uptill_index: node -> uptill)
                         {
-                            solution_vector.insert(make_pair(uptill_index, index));
+                            // solution_vector.insert(make_pair(uptill_index, index));
+                            auto find_iter = solution_vector.find(uptill_index);
+                            if(find_iter != solution_vector.end())
+                            {
+                            	find_iter -> second.insert(index);
+                            }
+                            else
+                            {
+                            	unordered_set< int > new_set;
+                            	new_set.insert(index);
+                            	solution_vector.insert(make_pair(uptill_index, new_set));
+                            }
                         }
                     }
                 }
@@ -106,11 +117,33 @@ struct Trie_Graph
             // }
             for(auto uptill_index: node -> uptill)
             {    
-                solution_vector.insert(make_pair(uptill_index, index));
+                // solution_vector.insert(make_pair(uptill_index, index));
+                auto find_iter = solution_vector.find(uptill_index);
+                if(find_iter != solution_vector.end())
+                {
+                	find_iter -> second.insert(index);
+                }
+                else
+                {
+                	unordered_set< int > new_set;
+                	new_set.insert(index);
+                	solution_vector.insert(make_pair(uptill_index, new_set));
+                }
             }
             for(auto below_index: node -> below)
             {
-                solution_vector.insert(make_pair(below_index, index));
+                // solution_vector.insert(make_pair(below_index, index));
+                auto find_iter = solution_vector.find(below_index);
+                if(find_iter != solution_vector.end())
+                {
+                	find_iter -> second.insert(index);
+                }
+                else
+                {
+                	unordered_set< int > new_set;
+                	new_set.insert(index);
+                	solution_vector.insert(make_pair(below_index, new_set));
+                }
             }
         }
         // cout << "*******" << "\n";
@@ -167,13 +200,13 @@ class Solution
                     {
                         first_pointer += (word[(i + 1) / 2] % hash_modulo);
                         second_pointer += (word[(i + 1)] % hash_modulo);
-                        first_pointer = first_pointer % hash_modulo;
-                        second_pointer = second_pointer % hash_modulo;
+                        first_pointer = (first_pointer + hash_modulo) % hash_modulo;
+                        second_pointer = (second_pointer + hash_modulo) % hash_modulo;
                     }
                     else
                     {
                         second_pointer = second_pointer - (word[(i + 1) / 2] % hash_modulo) + (word[i + 1] % hash_modulo);
-                        second_pointer = (second_pointer % hash_modulo);
+                        second_pointer = ((second_pointer + hash_modulo) % hash_modulo);
                     }
                 }
             }
@@ -216,7 +249,7 @@ class Solution
              int words_vec_length = words.size();
              // cout << "mile_stone 2: " << words_vec_length << "\n";
              
-            unordered_map< int, int > solution_vector;
+            unordered_map< int, unordered_set< int > > solution_vector;
 
             Trie_Graph* trie_graph = new Trie_Graph;
             vector< int > empty_string_indices;
@@ -274,8 +307,31 @@ class Solution
             		for(auto induvidual_palindromic_string_index: induvidual_palindromic_string_indices)
             		{
             			// cout << "Induvidual: " << induvidual_palindromic_string_index << " empty: " << empty_index << "\n";
-            			solution_vector.insert(make_pair(empty_index, induvidual_palindromic_string_index));
-            			solution_vector.insert(make_pair(induvidual_palindromic_string_index, empty_index));
+            			// solution_vector.insert(make_pair(empty_index, induvidual_palindromic_string_index));
+            			// solution_vector.insert(make_pair(induvidual_palindromic_string_index, empty_index));
+            			auto find_iter = solution_vector.find(empty_index);
+		                if(find_iter != solution_vector.end())
+		                {
+		                	find_iter -> second.insert(induvidual_palindromic_string_index);
+		                }
+		                else
+		                {
+		                	unordered_set< int > new_set;
+		                	new_set.insert(induvidual_palindromic_string_index);
+		                	solution_vector.insert(make_pair(empty_index, new_set));
+		                }
+
+		                auto find_iter_modified = solution_vector.find(induvidual_palindromic_string_index);
+		                if(find_iter_modified != solution_vector.end())
+		                {
+		                	find_iter_modified -> second.insert(empty_index);
+		                }
+		                else
+		                {
+		                	unordered_set< int > new_set;
+		                	new_set.insert(empty_index);
+		                	solution_vector.insert(make_pair(induvidual_palindromic_string_index, new_set));
+		                }
             		}
             	}
             }
@@ -283,13 +339,20 @@ class Solution
             vector< vector< int > > palindromic_pairs;
             for(auto map_iter = solution_vector.begin(); map_iter != solution_vector.end(); map_iter++)
             {
+                // int index_1 = map_iter -> first;
+                // int index_2 = map_iter -> second;
+                // vector< int > pair_vec;
+                // pair_vec.push_back(index_1);
+                // pair_vec.push_back(index_2);
+                // palindromic_pairs.push_back(pair_vec);
                 int index_1 = map_iter -> first;
-                int index_2 = map_iter -> second;
-                // cout << "Index_1: " << index_1 << " Index_2: " << index_2 << "\n";
-                vector< int > pair_vec;
-                pair_vec.push_back(index_1);
-                pair_vec.push_back(index_2);
-                palindromic_pairs.push_back(pair_vec);
+                for(auto set_iter = map_iter -> second.begin(); set_iter != map_iter -> second.end(); set_iter++)
+                {
+                	vector< int > pair_vec;
+                	pair_vec.push_back(index_1);
+                	pair_vec.push_back(*set_iter);
+                	palindromic_pairs.push_back(pair_vec);
+                }
             }
             return palindromic_pairs;
         }

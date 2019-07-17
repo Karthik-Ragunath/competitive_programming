@@ -1,0 +1,22 @@
+def secondmax(l):
+    (mymax,mysecondmax) = (0,0)
+    #print("Hi")
+    for i in range(len(l)):
+        #print("Hello")
+        # Your code below this line
+        for j in range(i+1,len(l)):
+            if(l[i]<l[j]):
+                #print("Ji")
+                number=l[i]
+                l[i]=l[j]
+                l[j]=number
+        if(i!=0):
+            temp_number=l[i]
+            if(temp_number!=l[0]):
+                mysecondmax=temp_number
+                break
+    return(mysecondmax)
+
+list1=([1,2,3,4])
+number=secondmax(list1)
+print(number)

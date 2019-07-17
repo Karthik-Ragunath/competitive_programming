@@ -1,0 +1,16 @@
+number_of_terms = int(input())
+array = []
+value = []
+storage = []
+for x in range(number_of_terms):
+  array.append(int(input()))
+  storage.append(0)
+storage[0] = 1
+for i in range(number_of_terms):
+  maxval = 1
+  for j in range(i):
+    if array[i] % array[j] == 0:
+      maxval = max(maxval,(storage[j])+1)
+  storage[i] = maxval
+
+print(max(storage))

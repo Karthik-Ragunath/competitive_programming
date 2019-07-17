@@ -1,0 +1,14 @@
+from itertools import *
+mystring=input()
+words=mystring.split()
+iterator_value=int(words[1]);
+#print(iterator_value)
+listy=list(words[0])
+#print(list(combinations_with_replacement(listy,iterator_value))) //Equivalent to next line
+#print(list(combinations_with_replacement(words[0],iterator_value)))
+listy.sort()
+#words[0].sort() not possible since string does not have sort function
+list1=list(combinations_with_replacement(listy,iterator_value))
+for word in list1:
+    str1=''.join(word)
+    print(str1)

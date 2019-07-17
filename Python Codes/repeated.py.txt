@@ -1,0 +1,18 @@
+def repeated(l):
+    length=len(l)
+    count=0
+    for i in range(0,length):
+        if(l[i]==-897):
+            continue
+        flagship=False
+        for j in range(i+1,length):
+            if(l[i]==l[j]):
+                flagship=True
+                l[j]=-897
+        if(flagship==True):
+            count=count+1
+    return count
+
+list1=["the","higher","you","climb","the","further","you","fall"]
+counter=repeated(list1)
+print(counter)

@@ -1,0 +1,3 @@
+number_of_terms=int(input())
+for i in range(1,number_of_terms+1):
+    print(i,end='')

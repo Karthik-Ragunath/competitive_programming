@@ -1,0 +1,38 @@
+number_of_students=int(input())
+student_map={}
+for i in range(0,number_of_students):
+    temp_str=input()
+    words=temp_str.split()
+    length=len(words)
+    temp_list=[]
+    temporary=""
+    for j in range(0,length):
+        if(j==0):
+            temporary=words[j]
+            continue
+        else:
+            temp_num=float(words[j])
+            temp_list.append(temp_num)
+            continue
+    student_map[temporary]=temp_list
+finder=input()
+for key,value in student_map.items():
+    if(key==finder):
+        adder=0
+        solution=""
+        length_list=len(value)
+        for i in range(0,length_list):
+            adder=adder+value[i]
+        average=adder/length_list
+        #print(average)
+        average_str=str(average)
+        splitter=average_str.split(".")
+        length_temp=len(splitter[1])
+        if(length_temp==1):
+            splitter[1]=splitter[1]+"0"
+        temp_str=splitter[1]
+        secondpart="."+temp_str[:2]
+        solution=splitter[0]+secondpart
+        print(solution)
+        break
+            

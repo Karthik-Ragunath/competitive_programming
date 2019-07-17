@@ -1,0 +1,11 @@
+list1=[]
+number_of_terms=int(input())
+input_terms=input()
+words=input_terms.split()
+for i in range(0,number_of_terms):
+    number=int(words[i])
+    list1.insert(i,number)
+tuple1=tuple(list1)
+#print(tuple1)
+hash_code=hash(tuple1)
+print(hash_code)

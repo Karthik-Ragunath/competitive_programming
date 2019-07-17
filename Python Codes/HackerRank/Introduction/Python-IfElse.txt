@@ -1,0 +1,11 @@
+input_term=int(input())
+mod=input_term%2
+if mod==1:
+    print("Weird")
+elif ((input_term>=2) and (input_term<=5)):
+    print("Not Weird");
+elif ((input_term>=6) and (input_term<=20)):
+    print("Weird");
+else:
+    print("Not Weird");
+

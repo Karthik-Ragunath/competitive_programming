@@ -1,0 +1,4 @@
+ranger=int(input())
+for input in range(0,ranger):
+    a=input**2;
+    print(a);

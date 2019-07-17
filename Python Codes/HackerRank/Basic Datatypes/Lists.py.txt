@@ -1,0 +1,32 @@
+testcases=int(input())
+list1=[]
+for i in range(0,testcases):
+    mystring=input()
+    words=mystring.split()
+    length=len(words)
+    finder=words[0]
+    if finder=="insert":
+        position=int(words[1])
+        element=int(words[2])
+        list1.insert(position,element)
+        continue
+    elif finder=="print":
+        print(list1)
+        continue
+    elif finder=="append":
+        element=int(words[1])
+        list1.append(element)
+        continue
+    elif finder=="sort":
+        list1.sort()
+        continue
+    elif finder=="pop":
+        list1.pop()
+        continue
+    elif finder=="reverse":
+        list1.reverse()
+        continue
+    elif finder=="remove":
+        element=int(words[1])
+        list1.remove(element)
+        continue

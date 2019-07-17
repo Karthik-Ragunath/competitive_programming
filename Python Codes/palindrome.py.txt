@@ -1,0 +1,9 @@
+def mypalindrome(l):
+  if(l==[] or len(l) == 1):
+    return(True)
+  else:
+    return(l==l[::-1])
+
+list1=[22,16,16,22]
+decision=mypalindrome(list1)
+print(decision)

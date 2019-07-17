@@ -1,0 +1,47 @@
+from operator import *
+from collections import *
+number_of_students=int(input())
+namelist=[]
+scorelist={}
+result=[]
+for i in range(0,number_of_students):
+    temp_str=input()
+    namelist.insert(i,temp_str)
+    temp_marks=float(input())
+    scorelist[i]=temp_marks
+sorted_map=OrderedDict(sorted(scorelist.items(),key=itemgetter(1)))
+#print(sorted_map)
+j=0;
+comparer=0
+skipper=0
+keylist=[]
+for key,value in sorted_map.items():
+    if(j==0):
+        skipper=value
+        j=j+1
+        continue
+    if(j==1):
+        if(value==skipper):
+            continue
+        else:
+            keylist.append(key)
+            comparer=value
+            j=j+1
+            continue
+    else:
+        if(comparer==value):
+            keylist.append(key)
+            j=j+1
+            continue
+        else:
+            break
+#print(keylist)
+length=len(keylist)
+#print(length)
+namelist2=[]
+for i in range(0,length):
+    namelist2.append(namelist[keylist[i]])
+namelist2.sort()
+for i in range(0,length):
+    print(namelist2[i])
+            

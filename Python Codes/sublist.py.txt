@@ -1,0 +1,42 @@
+def sublist(l1,l2):
+    length1=len(l1)
+    length2=len(l2)
+    if(length1>length2):
+        return(False)
+    elif(length1==length2):
+        flagship=True
+        for i in range(0,length1):
+            if(l1[i]!=l2[i]):
+                flagship=False
+                break
+        if(flagship==True):
+            return(True)
+        else:
+            return(False)
+    else:
+        flagship=False
+        checker1=length1-1
+        for i in range(0,length2):
+            checker2=length2-(i+1)
+            if(checker1>checker2):
+                break;
+            else:
+                if(l1[0]==l2[i]):
+                    k=i+1
+                    flagship2=True
+                    for j in range (1,length1):
+                        if(l1[j]!=l2[k]):
+                            flagship2=False
+                            break
+                        else:
+                            k=k+1
+                    if(flagship2==True):
+                        flagship=True
+                        break
+        return(flagship)
+    return(False)
+
+list1=[2,2,4]
+list2=[2,2,3,4,5]
+decision=sublist(list1,list2)
+print(decision)

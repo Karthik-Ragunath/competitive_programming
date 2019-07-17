@@ -1,0 +1,21 @@
+number_of_terms=int(input())
+list1=[]
+mystring=input()
+words=mystring.split()
+for i in range(0,number_of_terms):
+    input1=int(words[i])
+    list1.append(input1)
+#list1.sort()
+#print(list1)
+list1.sort(reverse=True)
+#print(list1)
+number=0
+for i in range(0,number_of_terms):
+    if(i==0):
+        number=list1[0]
+    else:
+        temp_number=list1[i]
+        if(temp_number!=number):
+            print(temp_number)
+            break
+        

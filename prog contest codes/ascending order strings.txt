@@ -1,0 +1,44 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+int main() {
+	int noofstrings,i,j,resultant;
+	string str[100],temp,str1,str2;
+	;
+/*	char *str1=new char[100];
+	char *str2=new char[100];
+	char *temp=new char[100];
+	char *str[100]={0};*/
+	cin>>noofstrings;
+	for(i=0;i<noofstrings;i++)
+	{
+		cin>>str[i];
+	}
+	for(i=1;i<noofstrings;i++)
+	{
+		for(j=0;j<i;j++)
+		{
+			char *str1=new char[str[j].length()+1];
+			char *str2=new char[str[i].length()+1];
+			copy(str[j].begin(), str[j].end(), str1);
+			str1[str[j].size()] = '\0';
+			copy(str[i].begin(), str[i].end(), str2);
+			str2[str[i].size()] = '\0';
+			if(strcmp(str1,str2)>0)
+			//if(resultant>0)
+			{
+				temp=str[j];
+				str[j]=str[i];
+				str[i]=temp;
+			}
+		}
+	}
+	for(i=0;i<noofstrings;i++)
+	{
+		cout<<str[i]<<endl;
+	}
+	
+	// your code goes here
+	return 0;
+}

@@ -1,0 +1,33 @@
+#include <iostream>
+#include <sstream>
+#include <string>
+using namespace std;
+
+int main() {
+	long long int num;
+	cin>>num;
+	stringstream ss;
+	int length,l,flagship=1;
+	string str;
+	ss<<num;
+	ss>>str;
+	length=str.length();
+	for(l=0;l<length;l++)
+	{
+		if(str[l]!=str[length-1-l])
+		{
+			flagship=0;
+			cout<<str<< " is not a palindrome "<<endl;
+			break;
+			
+		}
+	}
+	if(flagship==1)
+	{
+		cout<<str<<" is a palidrome";
+	}
+
+
+	// your code goes here
+	return 0;
+}

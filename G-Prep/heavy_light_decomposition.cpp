@@ -277,8 +277,19 @@ int main()
 	*/
 	iota(union_find_parent.begin(), (union_find_parent.begin() + node_count + 1), 0);
 	iota(max_child_vec.begin(), (max_child_vec.begin() + node_count + 1), 0);
+	dfs(1);
+	hld(1);
+	create_fenwick_tree_chains();
 	for(ll i = 0; i < queries; i++)
 	{
-		
+		if(query_type_add.find(i) != query_type_add.end())
+		{
+			updates(query_type_add[i].first, query_type_add[i].second);
+		}
+		else
+		{
+			ll max_value = query_for_max(query_type_max[i].first, query_type_max[i].second);
+			cout << max_value << "\n";
+		}
 	}
 }

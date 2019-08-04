@@ -5,15 +5,15 @@ using namespace std;
 ll block_size = sqrt(30000);
 class ComparePairs
 {
-	bool operator()(const pair< ll, ll > &pair_val_1, const pair< ll, ll > &pair_val_2) const
+	bool operator()(const pair< ll, pair< ll, ll > > &pair_val_1, const pair< ll, pair< ll, ll > > &pair_val_2) const
 	{
-		if(pair_val_1.first / block_size < pair_val_2.first / block_size)
+		if(pair_val_1.second.first / block_size < pair_val_2.second.first / block_size)
 		{
 			return true;
 		}
-		else if(pair_val_1.first / block_size == pair_val_2.first / block_size)
+		else if(pair_val_1.second.first / block_size == pair_val_2.second.first / block_size)
 		{
-			if(pair_val_1.second < pair_val_2.second)
+			if(pair_val_1.second.second < pair_val_2.second.second)
 			{
 				return true;
 			}
@@ -54,18 +54,18 @@ int main()
 	cin >> inputs;
 	ll queries;
 	cin >> queries;
-	vector< pair< ll, ll > > queries;
+	vector< pair< ll, pair< ll, ll > > > queries;
 	for(ll i = 0; i < queries; i++)
 	{
 		int q1, q1;
-		queries.push_back(make_pair(q1 - 1, q2 - 1));
+		queries.push_back(make_pair(i, make_pair(q1 - 1, q2 - 1)));
 	}
 	sort(queries.begin(), queries.end(), ComparePairs());
 	ll current_left = 0, current_right = 0;
 	for(ll i = 0; i < queries; i++)
 	{
-		ll left = queries[i].first;
-		ll right = queries[i].second;
+		ll left = queries[i].second.first;
+		ll right = queries[i].second.second;
 		while(current_left < left)
 		{
 			remove(current_left);
@@ -86,6 +86,11 @@ int main()
 			remove(current_right);
 			current_right -= 1;
 		}
+		solution[queries[i].first] = distinct_vals;
+	}
+	for(ll i = 0; i < queries; i++)
+	{
+		cout << solution[i] << "\n";
 	}
 	return 0;
 }

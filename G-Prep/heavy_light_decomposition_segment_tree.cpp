@@ -24,11 +24,9 @@ vector< ll > parent_nodes(100001);
 unordered_map< pair< ll, ll >, ll, HASH > lca_pair_map;
 vector< ll > chain_number_vec(100001);
 vector< ll > chain_head;
-vector< vector< ll > > fenwick_tree(1000);
+vector< vector< ll > > segment_tree(1000);
 vector< unordered_map< ll, ll > > chain_positions(1000);
 vector< vector< ll > > chain_positions_values(1000);
-vector< bool > updated_atleast_once(100001);
-vector< ll > unique_values_updated_atleast_once_in_chain(1000);
 
 ll chain_number = 1;
 
@@ -89,7 +87,7 @@ ll update_segment_tree(ll start_index, ll end_index, vector< ll > &local_nodes, 
 	return local_segment_tree[position];
 }
 
-ll range_query(ll start_index, ll end_index, ll left, ll right, vector< ll > &local_nodes, vector< ll > &local_segment_tree, ll position)
+ll segment_tree_range_query(ll start_index, ll end_index, ll left, ll right, vector< ll > &local_segment_tree, ll position)
 {
 	if(left <= start_index and right >= end_index)
 	{
@@ -97,13 +95,13 @@ ll range_query(ll start_index, ll end_index, ll left, ll right, vector< ll > &lo
 	}
 	else if(left > end_index or right < start_index)
 	{
-		return -1000000000001;
+		return -1000000000000;
 	}
 	else
 	{
 		ll mid_index = (start_index + end_index) / 2;
-		ll left_max = range_query(start_index, mid_index, left, right, local_nodes, local_segment_tree, (2 * position + 1));
-		ll right_max = range_query(mid_index + 1, end_index, left, right, local_nodes, local_segment_tree, (2 * position + 2));
+		ll left_max = segment_tree_range_query(start_index, mid_index, left, right, local_segment_tree, (2 * position + 1));
+		ll right_max = segment_tree_range_query(mid_index + 1, end_index, left, right, local_segment_tree, (2 * position + 2));
 		if(left_max > right_max)
 		{
 			return left_max;
@@ -122,51 +120,6 @@ void print_vec(vector< ll > test_vec)
     {
         cout << "index: " << index << "val: " << *iter << "\n";
     }
-}
-
-void fenwick_tree_creation(ll start_index, ll end_index, vector< ll > &local_nodes, vector< ll > &local_fenwick_tree, ll update_value)
-{
-    while(start_index <= end_index)
-    {
-        local_fenwick_tree[start_index] = update_value > local_fenwick_tree[start_index] ? update_value : local_fenwick_tree[start_index];
-        start_index += start_index & (-start_index);
-    }
-}
-
-void create_fenwick_tree(ll start_index, ll end_index, vector< ll > &local_nodes, vector< ll > &local_fenwick_tree)
-{
-    for(ll i = 1; i <= end_index; i++)
-    {
-        // Node already exists 
-        fenwick_tree_creation(i, end_index, local_nodes, local_fenwick_tree, -1000000000000);
-    }
-}
-
-void update_fenwick_tree(ll index, ll value, ll end_index, vector< ll > &local_nodes, vector< ll > &local_fenwick_tree)
-{
-    local_nodes[index] += value;
-    fenwick_tree_creation(index, end_index, local_nodes, local_fenwick_tree, local_nodes[index]);
-}
-
-ll fenwick_query(ll index, vector< ll > &local_fenwick_tree)
-{
-    ll max_value = -1000000000001;
-    while(index > 0)
-    {
-        max_value = local_fenwick_tree[index] > max_value ? local_fenwick_tree[index] : max_value;
-        index -= (index & -index);
-    }
-    return max_value;
-}
-
-ll range_query(ll start_index, ll end_index, vector< ll > &local_fenwick_tree)
-{
-    ll end_index_val = fenwick_query(end_index, local_fenwick_tree);
-    ll start_index_val = fenwick_query(start_index - 1, local_fenwick_tree);
-    // cout << "range_query - end_index: " << end_index << " end_index_val: " << end_index_val << "\n";
-    // cout << "range_query - start_index: " << start_index << " start_index_val: " << start_index_val << "\n"; 
-    ll max_in_range = end_index_val - start_index_val;
-    return max_in_range;
 }
 
 ll dfs(ll index)
@@ -196,6 +149,10 @@ ll dfs(ll index)
             // cout << "lca_value: " << lca_value << "\n";
             lca_pair_map[make_pair(index, child_lca_index)] = lca_value;
             lca_pair_map[make_pair(child_lca_index, index)] = lca_value;
+        }
+        else if(index == child_lca_index)
+        {
+            lca_pair_map[make_pair(index, child_lca_index)] = index;
         }
     }
 
@@ -227,12 +184,12 @@ ll query_tree_up(ll index_1, ll index_2)
             min_index = position_index_1;
         }
         // cout << "Min_Index: " << min_index << " max_index: " << max_index << "\n";
-        ll range_max_value = range_query(min_index, max_index, fenwick_tree[chain_number_index_1]);
+        ll range_max_value = segment_tree_range_query(1, chain_positions_values[chain_number_index_1].size() - 1, min_index, max_index, segment_tree[chain_number_index_1], 0);
         return range_max_value;
     }
     else
     {
-        ll range_max_value = -10000000000;
+        ll range_max_value = -1000000000001;
         ll source_chain_number_index = -1, source_chain_position_index = -1, target_chain_number_index = -1, target_chain_position_index = -1;
         if(chain_number_index_1 > chain_number_index_2)
         {
@@ -251,7 +208,7 @@ ll query_tree_up(ll index_1, ll index_2)
         while(true)
         {
             // cout << source_chain_number_index << " " << source_chain_position_index << " " << target_chain_number_index << " " << target_chain_position_index << "\n";
-            ll range_value = range_query(1, source_chain_position_index, fenwick_tree[source_chain_number_index]);
+            ll range_value = segment_tree_range_query(1, chain_positions_values[source_chain_number_index].size() - 1, 1, source_chain_number_index, segment_tree[source_chain_number_index], 0);
             if(range_value > range_max_value)
             {
                 range_max_value = range_value;
@@ -262,7 +219,7 @@ ll query_tree_up(ll index_1, ll index_2)
             if(chain_number_vec[parent_chain_head] == target_chain_number_index)
             {
                 // cout << "new chain number is same as destination chain number" << "\n";
-                ll range_value = range_query(1, target_chain_position_index, fenwick_tree[target_chain_number_index]);
+                ll range_value = segment_tree_range_query(1, chain_positions_values[target_chain_number_index].size() - 1, 1, target_chain_position_index, segment_tree[target_chain_number_index], 0);
                 if(range_value > range_max_value)
                 {
                     range_max_value = range_value;
@@ -280,9 +237,12 @@ ll query_tree_up(ll index_1, ll index_2)
 ll query_for_max(ll index_1, ll index_2)
 {
     ll lca_value = lca_pair_map[make_pair(index_1, index_2)];
-    cout << "index_1: " << index_1 << " index_2: " << index_2 << " lca_value: " << lca_value << "\n";
+    // cout << "index_1: " << index_1 << " index_2: " << index_2 << " lca_value: " << lca_value << "\n";
+    
     ll max_value_range_1 = query_tree_up(index_1, lca_value);
     ll max_value_range_2 = query_tree_up(index_2, lca_value);
+    // cout << "max_value_1: " << index_1 << " " << lca_value << " : " << max_value_range_1 << "\n";
+    // cout << "max_value_2: " << index_2 << " " << lca_value << " : " << max_value_range_2 << "\n";
     if(max_value_range_1 > max_value_range_2)
     {
         return max_value_range_1;
@@ -290,8 +250,7 @@ ll query_for_max(ll index_1, ll index_2)
     else
     {
         return max_value_range_2;
-    }
-    return -1;
+    }    
 }
 
 void hld(ll index)
@@ -324,15 +283,15 @@ void hld(ll index)
     }
 }
 
-void create_fenwick_tree_chains()
+void create_segment_tree_chains()
 {
     for(ll i = 1; i <= chain_number; i++)
     {
-        vector< ll > local_fenwick_tree(chain_positions_values[i].size(), -1000000000000);
-        // create_fenwick_tree(1, chain_positions_values[i].size() - 1, chain_positions_values[i], local_fenwick_tree); // Doesnt make any difference 
-        fenwick_tree[i] = local_fenwick_tree;
+        vector< ll > local_segment_tree(chain_positions_values[i].size() * 4 + 3, 0);
+        create_segment_tree(1, chain_positions_values[i].size() - 1, chain_positions_values[i], local_segment_tree, 0);
+        segment_tree[i] = local_segment_tree;
         // cout << "Tree (Chain) Number: " << i << "\n";
-        // print_vec(fenwick_tree[i]);
+        // print_vec(segment_tree[i]);
     }
 }
 
@@ -340,23 +299,31 @@ void updates(ll index, ll value)
 {
     nodes[index] += value;
     ll chain_number_local = chain_number_vec[index];
-    if(!updated_atleast_once[index])
+    // cout << "previous segment tree values: " << "\n";
+    // print_vec(segment_tree[chain_number_local]);
+    auto local_chain_index_iter = chain_positions[chain_number_local].find(index);
+    ll local_chain_index = local_chain_index_iter -> second;
+    chain_positions_values[chain_number_local][local_chain_index] += value;
+    update_segment_tree(1, chain_positions_values[chain_number_local].size() - 1, chain_positions_values[chain_number_local], segment_tree[chain_number_local], 0, local_chain_index);
+    // cout << "tree (chain) number: " << chain_number_local << " local_chain_position: " << local_chain_index << " value to be updated: " << value <<  "\n";
+    // print_vec(segment_tree[chain_number_local]);
+}
+
+void run_updates(ll index, ll value)
+{
+    updates(index, value);
+    for(auto child: tree_nodes[index])
     {
-        updated_atleast_once[index] = true;
-        unique_values_updated_atleast_once_in_chain[chain_number_local] += 1;
+        run_updates(child, value);
     }
-    // cout << "previous fenwick tree values: " << "\n";
-    // print_vec(fenwick_tree[chain_number_local]);
-    auto local_fenwick_tree_index_iter = chain_positions[chain_number_local].find(index);
-    ll local_fenwick_tree_index = local_fenwick_tree_index_iter -> second;
-    update_fenwick_tree(local_fenwick_tree_index, value, chain_positions_values[chain_number_local].size() - 1, chain_positions_values[chain_number_local], fenwick_tree[chain_number_local]);
-    // cout << "tree (chain) number: " << chain_number_local << " fenwick_tree_position: " << local_fenwick_tree_index << " value to be updated: " << value <<  "\n";
-    // print_vec(fenwick_tree[chain_number_local]);
+    return;
 }
 
 
 int main()
 {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
     chain_head.push_back(0); // for convienience
     parent_nodes[1] = 1;
     ll node_count;
@@ -404,19 +371,19 @@ int main()
     // cout << "max_height: " << max_height << "\n";
     hld(1);
     cout << "Total chains: " << chain_number << "\n";
-    create_fenwick_tree_chains();
+    create_segment_tree_chains();
     for(ll i = 0; i < queries; i++)
     {
         if(query_type_add.find(i) != query_type_add.end())
         {
             // cout << "add_node: " << query_type_add[i].first << " value: " << query_type_add[i].second << "\n";
-            updates(query_type_add[i].first, query_type_add[i].second);
+            run_updates(query_type_add[i].first, query_type_add[i].second);
         }
         else
         {
             // cout << "node_1: " << query_type_max[i].first << " node_2: " << query_type_max[i].second << "\n";
             ll max_value = query_for_max(query_type_max[i].first, query_type_max[i].second);
-            // cout << max_value << "\n";
+            cout << max_value << "\n";
         }
     }
 }

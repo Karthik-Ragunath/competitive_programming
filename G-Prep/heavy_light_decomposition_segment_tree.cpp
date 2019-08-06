@@ -185,8 +185,8 @@ ll query_tree_up(ll index_1, ll index_2)
         }
         // cout << "Min_Index: " << min_index << " max_index: " << max_index << "\n";
         ll range_max_value = segment_tree_range_query(1, chain_positions_values[chain_number_index_1].size() - 1, min_index, max_index, segment_tree[chain_number_index_1], 0);
-        cout << "size: " << (chain_positions_values[chain_number_index_1].size() - 1) << "\n";
-        cout << "inside same queue" << "\n";
+        // cout << "size: " << (chain_positions_values[chain_number_index_1].size() - 1) << "\n";
+        // cout << "inside same queue" << "\n";
         return range_max_value;
     }
     else
@@ -210,7 +210,8 @@ ll query_tree_up(ll index_1, ll index_2)
         while(true)
         {
             // cout << source_chain_number_index << " " << source_chain_position_index << " " << target_chain_number_index << " " << target_chain_position_index << "\n";
-            ll range_value = segment_tree_range_query(1, chain_positions_values[source_chain_number_index].size() - 1, 1, source_chain_number_index, segment_tree[source_chain_number_index], 0);
+            ll range_value = segment_tree_range_query(1, chain_positions_values[source_chain_number_index].size() - 1, 1, source_chain_position_index, segment_tree[source_chain_number_index], 0);
+            // cout << "Range Value: " << range_value << "\n";
             if(range_value > range_max_value)
             {
                 range_max_value = range_value;
@@ -222,6 +223,7 @@ ll query_tree_up(ll index_1, ll index_2)
             {
                 // cout << "new chain number is same as destination chain number" << "\n";
                 ll range_value = segment_tree_range_query(1, chain_positions_values[target_chain_number_index].size() - 1, 1, target_chain_position_index, segment_tree[target_chain_number_index], 0);
+                // cout << "termination range value: " << range_value << "\n";
                 if(range_value > range_max_value)
                 {
                     range_max_value = range_value;
@@ -231,6 +233,7 @@ ll query_tree_up(ll index_1, ll index_2)
             source_chain_number_index = chain_number_vec[parent_chain_head];
             auto source_chain_position_index_iter = chain_positions[source_chain_number_index].find(parent_chain_head);
             source_chain_position_index = source_chain_position_index_iter -> second;
+            // cout << "source_chain_number: " << source_chain_number_index << " source_chain_position_index: " << source_chain_position_index << " chain_size: " << chain_positions_values[source_chain_number_index].size() - 1 << "\n"; 
         }
         return range_max_value;
     }
@@ -239,12 +242,12 @@ ll query_tree_up(ll index_1, ll index_2)
 ll query_for_max(ll index_1, ll index_2)
 {
     ll lca_value = lca_pair_map[make_pair(index_1, index_2)];
-    cout << "index_1: " << index_1 << " index_2: " << index_2 << " lca_value: " << lca_value << "\n";
+    // cout << "index_1: " << index_1 << " index_2: " << index_2 << " lca_value: " << lca_value << "\n";
     
     ll max_value_range_1 = query_tree_up(index_1, lca_value);
     ll max_value_range_2 = query_tree_up(index_2, lca_value);
-    cout << "max_value_1: " << index_1 << " " << lca_value << " : " << max_value_range_1 << "\n";
-    cout << "max_value_2: " << index_2 << " " << lca_value << " : " << max_value_range_2 << "\n";
+    // cout << "max_value_1: " << index_1 << " " << lca_value << " : " << max_value_range_1 << "\n";
+    // cout << "max_value_2: " << index_2 << " " << lca_value << " : " << max_value_range_2 << "\n";
     if(max_value_range_1 > max_value_range_2)
     {
         return max_value_range_1;
@@ -311,6 +314,19 @@ void updates(ll index, ll value)
     // print_vec(segment_tree[chain_number_local]);
 }
 
+void print_2d_vec(vector< vector< ll > > test_vec)
+{
+    for(int i = 0; i < test_vec.size(); i++)
+    {
+        cout << "chain number: " << i << "\n";
+        for(int j = 0; j < test_vec[i]. size(); j++)
+        {
+            cout << test_vec[i][j] << " ";
+        }
+        cout << "\n";
+    }
+}
+
 void run_updates(ll index, ll value)
 {
     updates(index, value);
@@ -372,7 +388,7 @@ int main()
     ll max_height = dfs(1);
     // cout << "max_height: " << max_height << "\n";
     hld(1);
-    cout << "Total chains: " << chain_number << "\n";
+    // cout << "Total chains: " << chain_number << "\n";
     create_segment_tree_chains();
     for(ll i = 0; i < queries; i++)
     {
@@ -389,6 +405,7 @@ int main()
             cout << max_value << "\n";
         }
     }
+    // print_2d_vec(chain_positions_values);
     // print_vec(nodes);
 }
 

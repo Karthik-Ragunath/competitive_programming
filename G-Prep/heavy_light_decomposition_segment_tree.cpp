@@ -43,74 +43,74 @@ ll find_parent_index(ll index)
 
 ll create_segment_tree(ll start_index, ll end_index, vector< ll > &local_nodes, vector< ll > &local_segment_tree, ll position)
 {
-	if(start_index == end_index)
-	{
-		local_segment_tree[position] = local_nodes[start_index];
-		return local_nodes[start_index];
-	}
-	ll mid_index = (start_index + end_index) / 2;
-	ll left_max = create_segment_tree(start_index, mid_index, local_nodes, local_segment_tree, (2 * position + 1));
-	ll right_max = create_segment_tree(mid_index + 1, end_index, local_nodes, local_segment_tree, (2 * position + 2));
-	if(left_max > right_max)
-	{
-		local_segment_tree[position] = left_max;
-	}
-	else
-	{
-		local_segment_tree[position] = right_max;
-	}
-	return local_segment_tree[position];
+    if(start_index == end_index)
+    {
+        local_segment_tree[position] = local_nodes[start_index];
+        return local_nodes[start_index];
+    }
+    ll mid_index = (start_index + end_index) / 2;
+    ll left_max = create_segment_tree(start_index, mid_index, local_nodes, local_segment_tree, (2 * position + 1));
+    ll right_max = create_segment_tree(mid_index + 1, end_index, local_nodes, local_segment_tree, (2 * position + 2));
+    if(left_max > right_max)
+    {
+        local_segment_tree[position] = left_max;
+    }
+    else
+    {
+        local_segment_tree[position] = right_max;
+    }
+    return local_segment_tree[position];
 }
 
 ll update_segment_tree(ll start_index, ll end_index, vector< ll > &local_nodes, vector< ll > &local_segment_tree, ll position, ll update_position)
 {
-	if(update_position < start_index or update_position > end_index)
-	{
-		return local_segment_tree[position];
-	}
-	if(start_index == end_index)
-	{
-		local_segment_tree[position] = local_nodes[start_index];
-		return local_segment_tree[position];
-	}
-	ll mid_index = (start_index + end_index) / 2;
-	ll left_max = update_segment_tree(start_index, mid_index, local_nodes, local_segment_tree, (2 * position + 1), update_position);
-	ll right_max = update_segment_tree(mid_index + 1, end_index, local_nodes, local_segment_tree, (2 * position + 2), update_position);
-	if(left_max > right_max)
-	{
-		local_segment_tree[position] = left_max;
-	}
-	else
-	{
-		local_segment_tree[position] = right_max;
-	}
-	return local_segment_tree[position];
+    if(update_position < start_index or update_position > end_index)
+    {
+        return local_segment_tree[position];
+    }
+    if(start_index == end_index)
+    {
+        local_segment_tree[position] = local_nodes[start_index];
+        return local_segment_tree[position];
+    }
+    ll mid_index = (start_index + end_index) / 2;
+    ll left_max = update_segment_tree(start_index, mid_index, local_nodes, local_segment_tree, (2 * position + 1), update_position);
+    ll right_max = update_segment_tree(mid_index + 1, end_index, local_nodes, local_segment_tree, (2 * position + 2), update_position);
+    if(left_max > right_max)
+    {
+        local_segment_tree[position] = left_max;
+    }
+    else
+    {
+        local_segment_tree[position] = right_max;
+    }
+    return local_segment_tree[position];
 }
 
 ll segment_tree_range_query(ll start_index, ll end_index, ll left, ll right, vector< ll > &local_segment_tree, ll position)
 {
-	if(left <= start_index and right >= end_index)
-	{
-		return local_segment_tree[position];
-	}
-	else if(left > end_index or right < start_index)
-	{
-		return -1000000000000;
-	}
-	else
-	{
-		ll mid_index = (start_index + end_index) / 2;
-		ll left_max = segment_tree_range_query(start_index, mid_index, left, right, local_segment_tree, (2 * position + 1));
-		ll right_max = segment_tree_range_query(mid_index + 1, end_index, left, right, local_segment_tree, (2 * position + 2));
-		if(left_max > right_max)
-		{
-			return left_max;
-		}
-		else
-		{
-			return right_max;
-		}
-	}
+    if(left <= start_index and right >= end_index)
+    {
+        return local_segment_tree[position];
+    }
+    else if(left > end_index or right < start_index)
+    {
+        return -1000000000000;
+    }
+    else
+    {
+        ll mid_index = (start_index + end_index) / 2;
+        ll left_max = segment_tree_range_query(start_index, mid_index, left, right, local_segment_tree, (2 * position + 1));
+        ll right_max = segment_tree_range_query(mid_index + 1, end_index, left, right, local_segment_tree, (2 * position + 2));
+        if(left_max > right_max)
+        {
+            return left_max;
+        }
+        else
+        {
+            return right_max;
+        }
+    }
 }
 
 void print_vec(vector< ll > test_vec)
@@ -185,6 +185,8 @@ ll query_tree_up(ll index_1, ll index_2)
         }
         // cout << "Min_Index: " << min_index << " max_index: " << max_index << "\n";
         ll range_max_value = segment_tree_range_query(1, chain_positions_values[chain_number_index_1].size() - 1, min_index, max_index, segment_tree[chain_number_index_1], 0);
+        cout << "size: " << (chain_positions_values[chain_number_index_1].size() - 1) << "\n";
+        cout << "inside same queue" << "\n";
         return range_max_value;
     }
     else
@@ -237,12 +239,12 @@ ll query_tree_up(ll index_1, ll index_2)
 ll query_for_max(ll index_1, ll index_2)
 {
     ll lca_value = lca_pair_map[make_pair(index_1, index_2)];
-    // cout << "index_1: " << index_1 << " index_2: " << index_2 << " lca_value: " << lca_value << "\n";
+    cout << "index_1: " << index_1 << " index_2: " << index_2 << " lca_value: " << lca_value << "\n";
     
     ll max_value_range_1 = query_tree_up(index_1, lca_value);
     ll max_value_range_2 = query_tree_up(index_2, lca_value);
-    // cout << "max_value_1: " << index_1 << " " << lca_value << " : " << max_value_range_1 << "\n";
-    // cout << "max_value_2: " << index_2 << " " << lca_value << " : " << max_value_range_2 << "\n";
+    cout << "max_value_1: " << index_1 << " " << lca_value << " : " << max_value_range_1 << "\n";
+    cout << "max_value_2: " << index_2 << " " << lca_value << " : " << max_value_range_2 << "\n";
     if(max_value_range_1 > max_value_range_2)
     {
         return max_value_range_1;
@@ -378,6 +380,7 @@ int main()
         {
             // cout << "add_node: " << query_type_add[i].first << " value: " << query_type_add[i].second << "\n";
             run_updates(query_type_add[i].first, query_type_add[i].second);
+            // print_vec(nodes);
         }
         else
         {
@@ -386,6 +389,7 @@ int main()
             cout << max_value << "\n";
         }
     }
+    // print_vec(nodes);
 }
 
 /*

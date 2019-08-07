@@ -438,4 +438,29 @@ new chain number is same as destination chain number
 5 1 1 2
 chain_head_index: 11 parent_chain_head_index: 10
 new chain number is same as destination chain number
+
+10
+1 2
+1 3
+2 4
+2 5
+3 6
+3 7
+4 8
+8 9
+10 9
+13
+add 1 -5
+add 2 -4
+add 3 6
+add 4 2
+add 5 4
+add 6 -3
+add 7 1
+add 8 -1
+add 9 -3
+add 10 5
+add 4 4
+max 1 6
+max 8 6
 */

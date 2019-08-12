@@ -1,3 +1,8 @@
+// https://www.hackerearth.com/practice/math/geometry/line-sweep-technique/tutorial/
+// https://www.topcoder.com/community/competitive-programming/tutorials/line-sweep-algorithms/ (important)
+// http://olympiad.cs.uct.ac.za/presentations/camp1_2009/linesweep_handout.pdf
+// https://www.youtube.com/watch?v=UUCKvHTP4Gg (important)
+
 #include <bits/stdc++.h>
 using namespace std;
 #define ll long long int

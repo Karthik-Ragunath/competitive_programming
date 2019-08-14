@@ -56,7 +56,9 @@ vector< pair< ll, ll > > get_convex_hull(vector< pair< ll, ll > > &vector_pairs)
 	{
 		while(upper_hull.size() >= 2 and not is_anti_clockwise_turn(upper_hull[upper_hull.size() - 2], upper_hull[upper_hull.size() - 1], vector_pairs[i]))
 		{
-			upper_hull.erase(upper_hull.end());
+			// upper_hull.erase(upper_hull.end()); // works but undefined behaviour
+			// upper_hull.erase(--upper_hull.end());
+			upper_hull.pop_back();
 		}
 		upper_hull.push_back(vector_pairs[i]);
 	} 	
@@ -65,13 +67,18 @@ vector< pair< ll, ll > > get_convex_hull(vector< pair< ll, ll > > &vector_pairs)
 	{
 		while(lower_hull.size() >= 2 and not is_anti_clockwise_turn(lower_hull[lower_hull.size() - 2], lower_hull[lower_hull.size() - 1], vector_pairs[i]))
 		{
-			lower_hull.erase(lower_hull.end());
+			// lower_hull.erase(lower_hull.end());
+			lower_hull.pop_back();
 		}
 		lower_hull.push_back(vector_pairs[i]);
 	}
 	// print_vec_pairs(lower_hull);
-	upper_hull.erase(upper_hull.end());
-	lower_hull.erase(lower_hull.end());
+	/* works but undefined behaviour for vec
+	// upper_hull.erase(upper_hull.end());
+	// lower_hull.erase(lower_hull.end());
+	*/
+	upper_hull.pop_back();
+	lower_hull.pop_back();
 	upper_hull.reserve(upper_hull.size() + lower_hull.size());
 	upper_hull.insert(upper_hull.end(), lower_hull.begin(), lower_hull.end());
 	return upper_hull;

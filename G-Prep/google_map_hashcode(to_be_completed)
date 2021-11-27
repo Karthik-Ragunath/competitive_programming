@@ -1,0 +1,54 @@
+# your code goes here
+from collections import defaultdict
+
+line = input()
+D,I,S,V,F=map(int, line.split())
+print(D,I,S,V,F)
+print(type(D))
+street_details = dict()
+int_details = defaultdict(list)
+cars_details = dict()
+int_nodes = defaultdict(list)
+
+
+for i in range(S):
+	inp = input()
+	start_int, end_int, st_name, st_len = inp.split(' ')
+	street_details[st_name] = [[start_int, end_int], st_len]
+	int_details[end_int].append(st_name)
+	int_nodes[end_int].append([start_int, st_name, st_len])
+
+
+overall_path_details_forward = []
+overall_path_details_backward = []
+for i in range(V):
+	path_details = []
+	inp = input()
+	split_inp = inp.split()
+	cars_details[i] = [split_inp[0], split_inp[1:]]
+	for index, street_name in enumerate(split_inp[1:]):
+		if index == 0:
+			continue
+		street_detail = street_details[street_name]
+		start_int, end_int = street_detail[0]
+		street_detail_prev = street_details[split_inp[1:][index]]
+		prev_start_int, prev_end_int = street_detail_prev[0]
+		prev_st_len = street_detail_prev[1]
+		path_details.append([split_inp[1:][index], prev_st_len])
+		overall_path_details.append(path_details)
+		
+		
+print(int_details)
+print('--------')
+print(cars_details)
+print('--------')
+print(street_details)
+print('-----------')
+print('graph:', overall_path_details)
+
+
+
+
+
+	
+	
